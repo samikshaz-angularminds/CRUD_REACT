@@ -5,13 +5,13 @@ const Admin = require("../model/admin.model");
 
 verifyToken = asyncHandler(async (req, res, next) => {
 
-    console.log("verify from req.. ", req.header("Authorization"));
+    // console.log("verify from req.. ", req.header("Authorization"));
     
 
     try {
         const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
 
-        console.log("token- ",token);
+        // console.log("token- ",token);
         
 
         if (!token) {

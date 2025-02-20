@@ -1,48 +1,176 @@
 import { useState } from "react";
+import axios from "axios";
+import * as constants from "../constants/constants";
 
 function Register() {
-    const [registerData,setRegisterData] = useState({
-        name: "",
-        email: "",
-        organization: "",
-        password: ""
-    });
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    department: "",
+    password: "",
+    employee_id: "",
+    gender: "",
+    phoneNo: "",
+    marital_status: "",
+  });
 
-    const handleChange = (event) => {
-        const eventValue = event.target.value;
-        const eventName = event.target.name;
+  const genderArray = ["Male", "Female", "Other", "Prefer Not To Say"];
+  const maritalStatusArray = ["Married", "Unmarried"];
 
-        setRegisterData((prev) => ({...prev, [eventName]: eventValue}));
-    }
+  const handleChange = (event) => {
+    const eventValue = event.target.value;
+    const eventName = event.target.name;
 
-    const submitData = (event) => {
-        event.preventDefault();
-        console.log(registerData);
-    };
+    console.log("====================================");
+    console.log("EVENT VALUE: ", eventValue);
+    console.log("====================================");
+    console.log("====================================");
+    console.log("EVENT NAME: ", eventName);
+    console.log("====================================");
 
-  return(
-    <div className="card">
+    setRegisterData((prev) => ({ ...prev, [eventName]: eventValue }));
+  };
+
+  const submitData = (event) => {
+    event.preventDefault();
+    console.log(registerData);
+
+    axios
+      .post(constants.API_URL + constants.ADMIN_REGISTER, registerData)
+      .then((response) => {
+        console.log("====================================");
+        console.log("RESPONSE OF REGISTER: ", response);
+        console.log("====================================");
+      })
+      .catch((error) => {
+        console.log("====================================");
+        console.log("Error encountered while registering the user: ", error);
+        console.log("====================================");
+      });
+  };
+
+  return (
+    <div className="container d-flex justify-content-center align-items-center">
+      <div className="card register-form-width">
         <form action="" onSubmit={submitData}>
-            <div>
-                <label htmlFor="">Name</label>
-                <input type="text" className="form-control" name="name" value={registerData.name} onChange={(e)=> handleChange(e)} />
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Name</label>
             </div>
-            <div>
-                <label htmlFor="">Email</label>
-                <input type="text" className="form-control" name="email" value={registerData.email} onChange={(e)=> handleChange(e)} />
+            <input
+              type="text"
+              className="form-control"
+              name="name"
+              value={registerData.name}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Email</label>
             </div>
-            <div>
-                <label htmlFor="">Organization</label>
-                <input type="text" className="form-control" name="organization" value={registerData.organization} onChange={(e)=> handleChange(e)} />
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={registerData.email}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Department</label>
             </div>
-            <div>
-                <label htmlFor="">Password</label>
-                <input type="text" className="form-control" name="password" value={registerData.password} onChange={(e)=> handleChange(e)} />
+            <input
+              type="text"
+              className="form-control"
+              name="department"
+              value={registerData.department}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Password</label>
             </div>
-            <div>
-                <button className="btn btn-primary" type="submit"> Register</button>
+            <input
+              type="text"
+              className="form-control"
+              name="password"
+              value={registerData.password}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Employee ID</label>
             </div>
+            <input
+              type="text"
+              className="form-control"
+              name="employee_id"
+              value={registerData.employee_id}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Gender</label>
+            </div>
+            <select
+              className="form-select"
+              value={registerData.gender}
+              name="gender"
+              onChange={(e) => handleChange(e)}
+            >
+              <option value="Select">Select</option>
+              {genderArray.map((gender, index) => (
+                <option key={index} value={gender}>
+                  {gender}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Phone No</label>
+            </div>
+            <input
+              maxLength={10}
+              type="text"
+              className="form-control"
+              name="phoneNo"
+              value={registerData.phoneNo}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
+          <div className="mt-2">
+            <div className="d-flex justify-content-start">
+              <label htmlFor="">Marital Status</label>
+            </div>
+
+            <select
+              name="marital_status"
+              value={registerData.marital_status}
+              onChange={(e) => handleChange(e)}
+              className="form-select"
+            >
+              <option value="Select"> Select </option>
+              {maritalStatusArray.map((status, index) => (
+                <option key={index} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mt-2">
+            <button className="btn btn-primary" type="submit">
+              Register
+            </button>
+          </div>
         </form>
+      </div>
     </div>
   );
 }

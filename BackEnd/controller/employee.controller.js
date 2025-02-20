@@ -1,6 +1,5 @@
 const Employee = require("../model/employee.model");
 const Admin = require("../model/admin.model");
-
 const asyncHandler = require("../utils/AsyncHandler.utils");
 const ApiError = require("../utils/ApiError.utils");
 const ApiResponse = require("../utils/ApiResponse.utils");
@@ -30,14 +29,7 @@ const addEmployee = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Failed to create new employee");
     }
 
-    return res
-        .json(
-            new ApiResponse(
-                201,
-                newEmployee,
-                "New Employee created successfully"
-            )
-        );
+    return res.json(newEmployee);
 
 });
 
@@ -69,16 +61,12 @@ const updateEmployee = asyncHandler(async (req, res) => {
 
     return res
         .json(
-            new ApiResponse(
-                200,
-                updatedEmployee,
-                "Employee information has been updated successfully"
-            )
+            updatedEmployee
         );
 });
 
 const deleteEmployee = asyncHandler(async (req, res) => {
-    const employee_id = req.query.employee_id;
+    const employee_id = req.params.id;
 
     const deleteEmployee = await Employee.findByIdAndDelete(employee_id);
 
@@ -86,35 +74,69 @@ const deleteEmployee = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Failed to delete the employee");
     }
 
-    return res
-        .json(
-            200,
-            {},
-            "User has been deleted successfully"
-        );
+    return res.json("User has been deleted successfully");
 });
 
 const getEmployees = asyncHandler(async (req, res) => {
+    // declaring requestQueryParams
+    let requestQueryParams;
 
-    const employees = await Employee.find({ admin: req.admin._id });
+    // if req.query exists then requestQueryParams will be assigned a value
+    if (req.query !== "") {
+        requestQueryParams = req.query;
+        console.log("request query is...", requestQueryParams);
+    }
+    
+    const page = requestQueryParams.page || 1;
+    let limit = requestQueryParams.limit || 10;
+    const skip = (page - 1) * limit;
 
+
+    // get all employees
+    let employees = await Employee.find({ admin: req.admin._id }).skip(skip).limit(limit);
+
+    // no employees
     if (!employees) {
         throw new ApiError(404, "Employees not found");
     }
 
-    const page = 1;
-    const limit = 10;
+    const search = requestQueryParams.search;
+    const filterDept = requestQueryParams.filterDept;
     const totalEmployees = await Employee.countDocuments()
-    const totalPages = Math.ceil(totalEmployees/limit);
+    const totalPages = Math.ceil(totalEmployees / limit);
 
+
+
+    // filter by department
+    if (filterDept) {
+        console.log("employees before filtering: ", filterDept);
+
+        employees = employees.filter((employee) => employee.department === filterDept.toString());
+        console.log("employees after filtering: ", employees);
+
+        return res
+            .json({ employees, page, limit, totalEmployees, totalPages });
+    }
+
+    if (search) {
+        employees = employees.filter((employee) => employee.name.toLowerCase().includes(search.toLowerCase()))
+        return res
+            .json({ employees, page, limit, totalEmployees, totalPages });
+    }
+
+
+    if (requestQueryParams.limit) {
+        limit = requestQueryParams.limit;
+        employees = await Employee.find().skip(skip).limit(parseInt(limit));
+        console.log("employees in limit: ",employees);
+        
+        return res
+            .json({employees, page, limit, totalEmployees, totalPages});
+    }
+
+   
     return res
-        .json(
-            new ApiResponse(
-                200,
-                {employees,page,limit,totalEmployees,totalPages},
-                "Employees"
-            )
-        );
+        .json({ employees, page, limit, totalEmployees, totalPages });
 });
 
 const getEmployeeById = asyncHandler(async (req, res) => {
@@ -126,14 +148,7 @@ const getEmployeeById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Employee not found");
     }
 
-    return res
-        .json(
-            new ApiResponse(
-                200,
-                employee,
-                "Employee found"
-            )
-        );
+    return res.json(employee);
 });
 
 module.exports = {

@@ -53,7 +53,7 @@ const loginAdmin = asyncHandler( async (req,res) => {
     console.log('====================================');
 
     return res
-    .cookie("token",options)
+    .cookie("token")
     .json(
        {admin,token}
     );

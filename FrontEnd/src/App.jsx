@@ -1,19 +1,31 @@
-import './App.css';
-import {Routes,Route} from 'react-router-dom';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import EmployeeList from './pages/EmployeeList';
-import AddEmployee from './pages/AddEmployee';
+import "./App.css";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import EmployeeList from "./pages/EmployeeList";
+import Header from "./components/Header";
+import { getToken } from "./services/token-decode-service";
+import ProtectedRoute from "./protectedRoute";
 
 function App() {
-  return(
-    <div>
-    <Routes>
-      <Route path='/register' element={<Register/>} />
-      <Route path='/' element={<Login/>} />
-      <Route path='/employee-list' element={<EmployeeList/>} />
-      <Route path='/add-employee' element={<AddEmployee/>} />
-      </Routes>
+
+const isLoggedIn = getToken();
+  return (
+    <div >
+        <Routes>
+          <Route path="/register" element={isLoggedIn ? <Navigate to={"/employee-list"} /> : <Register />} />
+          <Route path="/"  element={isLoggedIn ? <Navigate to={"/employee-list"} /> : <Login />} />
+
+          <Route
+            path="/employee-list"
+            element={
+              <ProtectedRoute>
+                <EmployeeList />
+              </ProtectedRoute>
+            }
+          />
+          
+        </Routes>
     </div>
   );
 }

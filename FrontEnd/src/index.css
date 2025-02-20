@@ -25,9 +25,14 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  /* min-width: 320px; */
+  width: 100vw;
   min-height: 100vh;
+}
+
+html {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 h1 {
@@ -65,4 +70,75 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* CUSTOMIZED STYLES */
+/* #root{
+  width: 100vw;
+  padding: 0 !important;
+  margin: 0 !important;
+} */
+
+.font-size-25 {
+  font-size: 25px;
+}
+
+.bg-header {
+  background-color: #979797;
+}
+
+.pagination-class {
+  background-color: #e6e6ee;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+}
+
+.pagination-class li {
+  padding: 20px;
+}
+
+.pagination-class .previous a {
+  color: brown;
+  text-decoration: none;
+}
+
+.pagination-class .selected a {
+  color: rgb(42, 147, 165);
+}
+
+.cursor-pointer{
+  cursor: pointer;
+}
+
+.register-form-width{
+  width: 500px;
+}
+
+.login-form-width{
+  width: 400px !important;
+}
+
+
+.disabled {
+  
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.disabled a{
+  color: rgb(165, 116, 116);
+
+  text-decoration: none;
+
+}
+
+.enabled a{
+  color: brown;
+  text-decoration: none;
+}
+
+.disabled-link {
+  text-decoration: none;
+  color: gray;
 }

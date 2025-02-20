@@ -10,12 +10,12 @@ router
 router
 .route("/")
 .post( verifyToken,employeeController.addEmployee)
-.delete( verifyToken,employeeController.deleteEmployee)
 
 router
 .route("/:id")
 .get( verifyToken,employeeController.getEmployeeById)
 .put( verifyToken,employeeController.updateEmployee)
+.delete( verifyToken,employeeController.deleteEmployee)
 
 
 module.exports = router

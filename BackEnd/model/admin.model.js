@@ -31,7 +31,7 @@ const adminSchema = new mongoose.Schema(
         gender: {
             type:String,
             required: true,
-            enum: ["Male", "Female", "Other"]
+            enum: ["Male", "Female", "Other", "Prefer Not To Say"]
         },
         marital_status : {
             type: String,
