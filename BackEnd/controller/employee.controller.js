@@ -86,55 +86,58 @@ const getEmployees = asyncHandler(async (req, res) => {
         requestQueryParams = req.query;
         console.log("request query is...", requestQueryParams);
     }
-    
+
     const page = requestQueryParams.page || 1;
     let limit = requestQueryParams.limit || 10;
     const skip = (page - 1) * limit;
+    const search = requestQueryParams.search;
+    const filterDept = requestQueryParams.filterDept;
+    const sortById = requestQueryParams.sortById;
 
+    let mongoQuery = { admin: req.admin._id };
+
+    if (filterDept) {
+        mongoQuery.department = filterDept;
+    }
+
+    if (search) {
+        mongoQuery.name = { $regex: `^${search}`, $options: "i" };
+    }
+
+    // let sortQuery = {};
+    // if (sortById) {
+    //     sortQuery.employee_id = { $expr: { $toInt: { $substr: ["employee_id", 2, -1] } } };
+    // }
+
+    let sortOrder = sortById === "asc" ? 1 : -1;
 
     // get all employees
-    let employees = await Employee.find({ admin: req.admin._id }).skip(skip).limit(limit);
+    let employees;
+    if (sortById) {
+        employees = await Employee.find(mongoQuery);
+
+
+        employees.sort((a, b) => {
+            let numA = parseInt(a.employee_id.replace(/\D/g, ""), 10); // Extract number
+            let numB = parseInt(b.employee_id.replace(/\D/g, ""), 10); // replace(/\D/g, "") removes non-numeric characters
+            return (sortById === "asc" ? numA - numB : numB - numA); // Sort numerically
+        });
+
+        employees = employees.slice(skip, skip + limit);
+    }
+    else {
+        employees = await Employee.find(mongoQuery).skip(skip).limit(limit);
+    }
 
     // no employees
     if (!employees) {
         throw new ApiError(404, "Employees not found");
     }
 
-    const search = requestQueryParams.search;
-    const filterDept = requestQueryParams.filterDept;
     const totalEmployees = await Employee.countDocuments()
     const totalPages = Math.ceil(totalEmployees / limit);
 
 
-
-    // filter by department
-    if (filterDept) {
-        console.log("employees before filtering: ", filterDept);
-
-        employees = employees.filter((employee) => employee.department === filterDept.toString());
-        console.log("employees after filtering: ", employees);
-
-        return res
-            .json({ employees, page, limit, totalEmployees, totalPages });
-    }
-
-    if (search) {
-        employees = employees.filter((employee) => employee.name.toLowerCase().includes(search.toLowerCase()))
-        return res
-            .json({ employees, page, limit, totalEmployees, totalPages });
-    }
-
-
-    if (requestQueryParams.limit) {
-        limit = requestQueryParams.limit;
-        employees = await Employee.find().skip(skip).limit(parseInt(limit));
-        console.log("employees in limit: ",employees);
-        
-        return res
-            .json({employees, page, limit, totalEmployees, totalPages});
-    }
-
-   
     return res
         .json({ employees, page, limit, totalEmployees, totalPages });
 });

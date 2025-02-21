@@ -8,16 +8,17 @@ import Pagination from "../components/Pagination";
 import ReactPaginate from "react-paginate";
 import AddEmployeeModal from "../components/AddEmployeeModal";
 import UpdateEmployeeModal from "../components/UpdateEmployeeModal";
+import { FaSearch } from "react-icons/fa";
 
 function EmployeeList() {
   let [empArray, setEmployeeArray] = useState([]); // setting up an array for the employee list
   let [inputValue, setInputValue] = useState(); // for sweetalert
-  let [load, setLoad] = useState(); // flag for delete
   let [pageCount, setPageCount] = useState(1); // total pages
-  let [currentPage, setCurrentPage] = useState(1); // for tracking page number
-  let [currentLimit, setCurrentLimit] = useState(10); // for limit per page
-  let [filterValue, setFilterValue] = useState(); // for filtering by department
-  let [searchValue, setSearchValue] = useState(); // for searching
+  let [currentPage, setCurrentPage] = useState(1);
+  let [currentLimit, setCurrentLimit] = useState(10);
+  let [filterValue, setFilterValue] = useState();
+  let [searchValue, setSearchValue] = useState();
+  let [sortValue, setSortValue] = useState();
 
   let [queryParams, setQueryParams] = useState({});
   const [selectedEmpId, setSelectedEmpId] = useState("");
@@ -31,7 +32,7 @@ function EmployeeList() {
     // console.log("useeffect queryparams=== ", queryParams);
 
     getAllEmployees(queryParams);
-  }, [load, queryParams]);
+  }, [queryParams]);
 
   // to get all employees for the table limit, search, page, filterDept
   const getAllEmployees = (queryParams) => {
@@ -75,26 +76,31 @@ function EmployeeList() {
     const searchValue = e.target.value;
     setSearchValue(searchValue);
     setQueryParams((prev) => ({ ...prev, search: searchValue }));
+    console.log("searching value is....... ", searchValue);
   };
 
-  const searchIt = () => {
+  const sortById = (e) => {
+    const sort = e.target.value;
+    setQueryParams((prev) => ({ ...prev, sortById: sort }));
+    getAllEmployees();
+  };
+
+  const afterAdding = () => {
+    getAllEmployees();
+  };
+
+  //to refresh after updating
+  const afterUpdating = () => {
+    getAllEmployees();
   };
 
   // on page change
   const handlePageChange = (event) => {
     const newStartingIndex = (event.selected * currentLimit) % empArray.length;
-    setStartIndex(newStartingIndex);
     console.log(event.selected);
     setCurrentPage(event.selected + 1);
     setQueryParams((prev) => ({ ...prev, page: event.selected + 1 }));
     // setEmployeeArray(empArray.slice())
-  };
-
-  // to display data in update modal
-  const getEmployee = (employeeId) => {
-    console.log("employee id in list: ", employeeId);
-
-    setSelectedEmpId(employeeId);
   };
 
   // deleting an employee {employee} has been passed
@@ -121,7 +127,7 @@ function EmployeeList() {
               axiosHeader
             )
             .then((response) => {
-              setLoad(true);
+              getAllEmployees();
             })
             .catch((error) => {
               console.log("ERROR WHILE DELETING AN EMPLOYEE: ", error);
@@ -137,6 +143,7 @@ function EmployeeList() {
     <div className="container">
       <div className="mb-3">
         <div className="d-flex align-items-center justify-content-evenly">
+          {/* ADD NEW EMPLOYEE */}
           <div>
             <button
               className="btn btn-sm btn-light border-secondary-subtle"
@@ -148,6 +155,19 @@ function EmployeeList() {
             </button>
           </div>
 
+          {/* SORTING */}
+          <div>
+            <select
+              value={sortValue}
+              onChange={(e) => sortById(e)}
+              className="form-select"
+            >
+              <option value="">Sort</option>
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+
           {/* FILTERING */}
           <div>
             <select
@@ -157,7 +177,7 @@ function EmployeeList() {
               value={filterValue}
               onChange={(e) => handleFilter(e)}
             >
-              <option value="Select">Select</option>
+              <option value="Select">Filter</option>
               {departmentsArray.map((department, index) => (
                 <option key={index} value={department}>
                   {department}
@@ -185,18 +205,15 @@ function EmployeeList() {
           {/* SEARCHING */}
           <div>
             <div className="input-group">
+              <span className="input-group-text">
+                <FaSearch />
+              </span>
               <input
                 className="form-control"
                 value={searchValue}
                 onChange={(e) => handleSearch(e)}
                 type="text"
               />
-              <span
-                className="input-group-text cursor-pointer"
-                onClick={searchIt}
-              >
-                search
-              </span>
             </div>
           </div>
         </div>
@@ -220,10 +237,10 @@ function EmployeeList() {
               {empArray.map((employee, index) => (
                 <tr key={index}>
                   <td className="align-middle"> {employee.employee_id} </td>
-                  <td  className="align-middle"> {employee.name} </td>
-                  <td  className="align-middle"> {employee.department} </td>
-                  <td  className="align-middle"> {employee.designation} </td>
-                  <td  className="align-middle">
+                  <td className="align-middle"> {employee.name} </td>
+                  <td className="align-middle"> {employee.department} </td>
+                  <td className="align-middle"> {employee.designation} </td>
+                  <td className="align-middle">
                     <div>
                       <button
                         className="btn btn-sm btn-warning m-1"
@@ -231,7 +248,6 @@ function EmployeeList() {
                         onClick={() => setSelectedEmpId(employee._id)}
                         data-bs-toggle="modal"
                         data-bs-target="#updateModal"
-                        
                       >
                         Update
                       </button>
@@ -265,10 +281,14 @@ function EmployeeList() {
           />
         </div>
       </div>
-      <AddEmployeeModal id={"addEmployeeModal"} />
+      <AddEmployeeModal onAddEmployee={afterAdding} id={"addEmployeeModal"} />
 
       {selectedEmpId && (
-        <UpdateEmployeeModal modalId={"updateModal"} empId={selectedEmpId} />
+        <UpdateEmployeeModal
+          onEmployeeUpdate={afterUpdating}
+          modalId={"updateModal"}
+          empId={selectedEmpId}
+        />
       )}
     </div>
   );

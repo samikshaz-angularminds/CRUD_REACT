@@ -2,8 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import * as constants from "../constants/constants";
 import { getToken } from "../services/token-decode-service";
-import "bootstrap/dist/css/bootstrap.min.css";
-function UpdateEmployeeModal({ modalId, empId }) {
+
+
+function UpdateEmployeeModal({ modalId, empId, onEmployeeUpdate }) {
   let [employee, setEmployee] = useState(); // to get one employee data
   const maritalStatusOptions = ["Married", "Unmarried"];
   const genderArray = ["Male", "Female", "Other", "Prefer Not To Say"];
@@ -29,6 +30,7 @@ function UpdateEmployeeModal({ modalId, empId }) {
       .then((response) => {
         console.log("update employee Response: ", response);
         setEmployee(response.data);
+        onEmployeeUpdate();
       })
       .catch((error) => {
         console.log("ERROR WHILE GETTING AN EMPLOYEE: ", error);
@@ -120,7 +122,8 @@ function UpdateEmployeeModal({ modalId, empId }) {
                     />
                   </div>
 
-                  <div className="mt-2">
+                  <div className="mt-2">  
+
                     <div className="d-flex align-items-start">
                       <label>Department</label>
                     </div>

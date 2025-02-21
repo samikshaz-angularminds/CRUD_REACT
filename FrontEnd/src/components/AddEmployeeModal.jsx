@@ -4,7 +4,7 @@ import { getToken } from "../services/token-decode-service";
 import axios from "axios";
 
 
-function AddEmployeeModal({ id }) {
+function AddEmployeeModal({ id,onAddEmployee }) {
   const [employeeData, setEmployeeData] = useState({
     employee_id: "",
     name: "",
@@ -31,7 +31,7 @@ function AddEmployeeModal({ id }) {
   //to add an employee
   const submitForm = (event) => {
     event.preventDefault(); // so that it only works on submit form
-    console.log(employeeData);
+    console.log("EMPLOYEE DATA: ",employeeData);
 
     axios
       .post(constants.API_URL + constants.ADD_EMPLOYEE, employeeData, {
@@ -39,6 +39,7 @@ function AddEmployeeModal({ id }) {
       })
       .then((response) => {
         console.log("response after adding... ",response);
+        onAddEmployee();
         
       })
       .catch((error) => {
@@ -64,6 +65,7 @@ function AddEmployeeModal({ id }) {
             <div className="modal-body">
               <div>
                 <form action="" onSubmit={submitForm}>
+
                   <div className="mt-2">
                     <div className="d-flex align-items-start ">
                       <label

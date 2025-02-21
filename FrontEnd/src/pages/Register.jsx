@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import * as constants from "../constants/constants";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [registerData, setRegisterData] = useState({
@@ -13,6 +14,7 @@ function Register() {
     phoneNo: "",
     marital_status: "",
   });
+  const navigate = useNavigate();
 
   const genderArray = ["Male", "Female", "Other", "Prefer Not To Say"];
   const maritalStatusArray = ["Married", "Unmarried"];
@@ -38,14 +40,21 @@ function Register() {
     axios
       .post(constants.API_URL + constants.ADMIN_REGISTER, registerData)
       .then((response) => {
-        console.log("====================================");
         console.log("RESPONSE OF REGISTER: ", response);
-        console.log("====================================");
+        setRegisterData({
+          name: "",
+          email: "",
+          department: "",
+          password: "",
+          employee_id: "",
+          gender: "",
+          phoneNo: "",
+          marital_status: "",
+        });
+        navigate("/");
       })
       .catch((error) => {
-        console.log("====================================");
         console.log("Error encountered while registering the user: ", error);
-        console.log("====================================");
       });
   };
 
