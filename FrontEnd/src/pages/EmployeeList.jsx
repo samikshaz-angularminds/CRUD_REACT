@@ -14,10 +14,10 @@ function EmployeeList() {
   let [inputValue, setInputValue] = useState(); // for sweetalert
   let [load, setLoad] = useState(); // flag for delete
   let [pageCount, setPageCount] = useState(1); // total pages
-  let [currentPage, setCurrentPage] = useState(1);
-  let [currentLimit, setCurrentLimit] = useState(10);
-  let [filterValue, setFilterValue] = useState();
-  let [searchValue, setSearchValue] = useState();
+  let [currentPage, setCurrentPage] = useState(1); // for tracking page number
+  let [currentLimit, setCurrentLimit] = useState(10); // for limit per page
+  let [filterValue, setFilterValue] = useState(); // for filtering by department
+  let [searchValue, setSearchValue] = useState(); // for searching
 
   let [queryParams, setQueryParams] = useState({});
   const [selectedEmpId, setSelectedEmpId] = useState("");
@@ -73,10 +73,8 @@ function EmployeeList() {
 
   const handleSearch = (e) => {
     const searchValue = e.target.value;
-    // setQueryParams((prev) => ({...prev,search:searchValue}));
     setSearchValue(searchValue);
     setQueryParams((prev) => ({ ...prev, search: searchValue }));
-    console.log("searching value is....... ", searchValue);
   };
 
   const searchIt = () => {
