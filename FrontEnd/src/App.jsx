@@ -6,6 +6,7 @@ import EmployeeList from "./pages/EmployeeList";
 import Header from "./components/Header";
 import { getToken } from "./services/token-decode-service";
 import ProtectedRoute from "./protectedRoute";
+import AdminProfile from "./pages/AdminProfile";
 
 function App() {
 
@@ -23,6 +24,14 @@ const isLoggedIn = getToken();
                 <EmployeeList />
               </ProtectedRoute>
             }
+          />
+          <Route 
+          path="/my-profile"
+          element={
+            <ProtectedRoute>
+              <AdminProfile />
+            </ProtectedRoute>
+          }
           />
           
         </Routes>

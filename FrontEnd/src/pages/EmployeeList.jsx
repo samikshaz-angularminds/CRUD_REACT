@@ -4,7 +4,6 @@ import * as constants from "../constants/constants";
 import { getToken } from "../services/token-decode-service";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import Pagination from "../components/Pagination";
 import ReactPaginate from "react-paginate";
 import AddEmployeeModal from "../components/AddEmployeeModal";
 import UpdateEmployeeModal from "../components/UpdateEmployeeModal";
@@ -21,8 +20,7 @@ function EmployeeList() {
   let [sortValue, setSortValue] = useState();
 
   let [queryParams, setQueryParams] = useState({});
-  const [selectedEmpId, setSelectedEmpId] = useState("");
-  const [startIndex, setStartIndex] = useState(0);
+  const [selectedEmp, setSelectedEmp] = useState("");
 
   const departmentsArray = ["IT", "Finance", "HR", "Marketing", "Operations"];
   const limitArray = ["5", "10", "15", "20"];
@@ -30,7 +28,6 @@ function EmployeeList() {
 
   useEffect(() => {
     // console.log("useeffect queryparams=== ", queryParams);
-
     getAllEmployees(queryParams);
   }, [queryParams]);
 
@@ -44,15 +41,12 @@ function EmployeeList() {
       params: queryParams,
     });
 
-    console.log("query params in get all employees---> ", queryParams);
+    // console.log("query params in get all employees---> ", queryParams);
 
     axiosRequest
       .then((response) => {
-        console.log("Get All Employees Response--> ", response);
-        console.log("Employees---> ", response.data.employees);
         setEmployeeArray(response.data.employees); // changing employee array
         setPageCount(response.data.totalPages); // setting how many pages are there
-        // console.log("employee array: ", empArray); // will not print due to shallow comparison maybe
       })
       .catch((error) => {
         console.log("ERROR: ", error);
@@ -85,22 +79,11 @@ function EmployeeList() {
     getAllEmployees();
   };
 
-  const afterAdding = () => {
-    getAllEmployees();
-  };
-
-  //to refresh after updating
-  const afterUpdating = () => {
-    getAllEmployees();
-  };
-
   // on page change
   const handlePageChange = (event) => {
-    const newStartingIndex = (event.selected * currentLimit) % empArray.length;
     console.log(event.selected);
     setCurrentPage(event.selected + 1);
     setQueryParams((prev) => ({ ...prev, page: event.selected + 1 }));
-    // setEmployeeArray(empArray.slice())
   };
 
   // deleting an employee {employee} has been passed
@@ -245,7 +228,7 @@ function EmployeeList() {
                       <button
                         className="btn btn-sm btn-warning m-1"
                         type="button"
-                        onClick={() => setSelectedEmpId(employee._id)}
+                        onClick={() => setSelectedEmp(employee)}
                         data-bs-toggle="modal"
                         data-bs-target="#updateModal"
                       >
@@ -281,16 +264,19 @@ function EmployeeList() {
           />
         </div>
       </div>
-      <AddEmployeeModal onAddEmployee={afterAdding} id={"addEmployeeModal"} />
+      <AddEmployeeModal onAddEmployee={getAllEmployees} id={"addEmployeeModal"} />
 
-      {selectedEmpId && (
+      {selectedEmp && (
         <UpdateEmployeeModal
-          onEmployeeUpdate={afterUpdating}
+          employeeFromList={selectedEmp}
+          onEmployeeUpdate={getAllEmployees}
           modalId={"updateModal"}
-          empId={selectedEmpId}
         />
       )}
     </div>
+
+
+
   );
 }
 

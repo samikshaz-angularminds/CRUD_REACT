@@ -142,3 +142,7 @@ button:focus-visible {
   text-decoration: none;
   color: gray;
 }
+
+.profile-name-width{
+  width: 150px;
+}

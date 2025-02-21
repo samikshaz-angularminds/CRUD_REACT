@@ -1,18 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../contexts/userContext";
-import { removeToken } from "../services/token-decode-service";
+import { CgProfile } from "react-icons/cg";
+import { useEffect } from "react";
 
 function Header() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
 
-    const onLogout = () => {
-        console.log('====================================');
-        console.log("in logout");
-        console.log('====================================');
-        localStorage.removeItem("token");
-        navigate("/")
-    }
+  const onLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
 
   return (
@@ -32,9 +29,19 @@ function Header() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-          <div >
-            <button className="btn btn-danger btn-sm" onClick={onLogout}>logout</button>
+        <div
+          className="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <div className="d-flex">
+            <div className="d-flex justify-content-center align-items-center m-1" onClick={() => navigate("/my-profile")}>
+              <CgProfile className="font-size-25 cursor-pointer"  />
+            </div>
+            <div className="m-1">
+              <button className="btn btn-danger btn-sm" onClick={onLogout}>
+                logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
