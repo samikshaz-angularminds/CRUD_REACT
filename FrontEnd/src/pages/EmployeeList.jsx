@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as constants from "../constants/constants";
 import { getToken } from "../services/token-decode-service";
 import Swal from "sweetalert2";
@@ -11,28 +11,27 @@ import { FaSearch } from "react-icons/fa";
 
 function EmployeeList() {
   let [empArray, setEmployeeArray] = useState([]); // setting up an array for the employee list
-  let [inputValue, setInputValue] = useState(); // for sweetalert
+  let [inputValue, setInputValue] = useState(""); // for sweetalert
   let [pageCount, setPageCount] = useState(1); // total pages
   let [currentPage, setCurrentPage] = useState(1);
   let [currentLimit, setCurrentLimit] = useState(10);
-  let [filterValue, setFilterValue] = useState();
-  let [searchValue, setSearchValue] = useState();
-  let [sortValue, setSortValue] = useState();
+  let [filterValue, setFilterValue] = useState("");
+  let [searchValue, setSearchValue] = useState("");
+  let [sortValue, setSortValue] = useState("");
 
   let [queryParams, setQueryParams] = useState({});
-  const [selectedEmp, setSelectedEmp] = useState("");
+  const [selectedEmp, setSelectedEmp] = useState({});
 
   const departmentsArray = ["IT", "Finance", "HR", "Marketing", "Operations"];
   const limitArray = ["5", "10", "15", "20"];
   const axiosHeader = { headers: { Authorization: `Bearer ${getToken()}` } };
 
   useEffect(() => {
-    // console.log("useeffect queryparams=== ", queryParams);
     getAllEmployees(queryParams);
   }, [queryParams]);
 
   // to get all employees for the table limit, search, page, filterDept
-  const getAllEmployees = (queryParams) => {
+  const getAllEmployees = useCallback((queryParams) => {
     let axiosRequest;
     const primaryRequest = constants.API_URL + constants.GET_ALL_EMPLOYEES;
 
@@ -51,7 +50,7 @@ function EmployeeList() {
       .catch((error) => {
         console.log("ERROR: ", error);
       });
-  };
+  }, []);
 
   // filtering by department
   const handleFilter = (e) => {
@@ -84,6 +83,11 @@ function EmployeeList() {
     console.log(event.selected);
     setCurrentPage(event.selected + 1);
     setQueryParams((prev) => ({ ...prev, page: event.selected + 1 }));
+  };
+
+  const empForUpdate = (emp) => {
+    console.log(emp);
+    setSelectedEmp(emp);
   };
 
   // deleting an employee {employee} has been passed
@@ -126,6 +130,7 @@ function EmployeeList() {
     <div className="container">
       <div className="mb-3">
         <div className="d-flex align-items-center justify-content-evenly">
+
           {/* ADD NEW EMPLOYEE */}
           <div>
             <button
@@ -228,7 +233,7 @@ function EmployeeList() {
                       <button
                         className="btn btn-sm btn-warning m-1"
                         type="button"
-                        onClick={() => setSelectedEmp(employee)}
+                        onClick={() => empForUpdate(employee)}
                         data-bs-toggle="modal"
                         data-bs-target="#updateModal"
                       >
@@ -264,7 +269,10 @@ function EmployeeList() {
           />
         </div>
       </div>
-      <AddEmployeeModal onAddEmployee={getAllEmployees} id={"addEmployeeModal"} />
+      <AddEmployeeModal
+        onAddEmployee={getAllEmployees}
+        id={"addEmployeeModal"}
+      />
 
       {selectedEmp && (
         <UpdateEmployeeModal
@@ -274,9 +282,6 @@ function EmployeeList() {
         />
       )}
     </div>
-
-
-
   );
 }
 

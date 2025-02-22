@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
-import { useEffect } from "react";
 
 function Header() {
   const navigate = useNavigate();
@@ -8,7 +7,7 @@ function Header() {
 
   const onLogout = () => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/",{replace:true});
   };
 
 

@@ -1,17 +1,16 @@
 import axios from "axios";
 import * as constants from "../constants/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getToken } from "../services/token-decode-service";
 
 function UpdateAdminModal({ adminFromProfile, modalId,onAdminUpdate }) {
   // console.log(admin);
-  const [admin, setAdmin] = useState();
+  const [admin, setAdmin] = useState({});
 
-  useState(() => {
+  useEffect(() => {
     if (adminFromProfile !== undefined) {
       setAdmin(adminFromProfile);
     }
-    console.log(adminFromProfile);
   }, []);
 
   const handleChange = (e) => {
@@ -28,7 +27,7 @@ function UpdateAdminModal({ adminFromProfile, modalId,onAdminUpdate }) {
     axios.put(constants.API_URL + constants.UPDATE_ADMIN,admin,{headers:{Authorization: `Bearer ${getToken()}`}})
     .then((response) =>{
         console.log(response);
-        
+        onAdminUpdate();
     })
     .catch((error) => {
         console.log("Error while updating an amin");

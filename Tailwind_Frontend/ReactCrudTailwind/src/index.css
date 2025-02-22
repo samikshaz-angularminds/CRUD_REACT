@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+.slider-container{
+position: relative;
+width: 300px;
+}
+
+.slider{
+    width: 100%;
+}
+
+.value-display{
+    position:absolute;
+    top: -30px;
+    transform: translate(-50%);
+    font-weight: bold;
+}

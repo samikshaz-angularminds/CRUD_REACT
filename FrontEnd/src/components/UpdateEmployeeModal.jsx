@@ -5,7 +5,7 @@ import { getToken } from "../services/token-decode-service";
 
 
 function UpdateEmployeeModal({ modalId, employeeFromList, onEmployeeUpdate }) {
-  let [employee, setEmployee] = useState(); // to get one employee data
+  let [employee, setEmployee] = useState({}); // to get one employee data
   const maritalStatusOptions = ["Married", "Unmarried"];
   const genderArray = ["Male", "Female", "Other", "Prefer Not To Say"];
   const departmentsArray = ["IT", "Finance", "HR", "Marketing", "Operations"];
