@@ -1,15 +1,38 @@
+import { useState } from "react";
+import ModalComponent from "../components/modal.component";
+
 function EmployeeList() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalId, setModalId] =useState("");
+
+  const openAddEmployeeModal = () => {
+    setModalOpen(true);
+    setModalId("addEmployeeModal");
+  };
+
+  const openUpdateEmployeeModal = () => {
+    setModalOpen(true);
+    setModalId("updateEmployeeModal");
+  };
+
   return (
-    <div className="container mx-auto  mt-6   flex flex-col  items-center">
+    <div className="container mx-auto  mt-6   flex flex-col  items-center relative">
       {/* PAGE NAVBAR */}
       <div className="flex pb-6 justify-around w-full">
         <div>
-          <button className="bg-blue-400 hover:bg-blue-700 rounded-lg p-1.5 px-3 hover:cursor-pointer">
+          <button
+            className="bg-blue-400 hover:bg-blue-700 rounded-lg p-1.5 px-3 hover:cursor-pointer"
+            onClick={openAddEmployeeModal}
+          >
             ADD EMPLOYEE
           </button>
         </div>
         <div>
-          <select name="" id="" className="border rounded-lg border-gray-400 p-2 outline-0 ">
+          <select
+            name=""
+            id=""
+            className="border rounded-lg border-gray-400 p-2 outline-0 "
+          >
             <option value="select">Select</option>
             <option value="select">IT</option>
             <option value="select">Finance</option>
@@ -39,7 +62,7 @@ function EmployeeList() {
               <td className="p-3 text-center">Manager</td>
               <td className="p-3 text-center">11/10/2025</td>
               <td className="p-3 text-center">
-                <button className="p-1 px-2 bg-amber-300 hover:bg-amber-500 rounded-lg m-1">
+                <button className="p-1 px-2 bg-amber-300 hover:bg-amber-500 rounded-lg m-1" onClick={openUpdateEmployeeModal}>
                   Update
                 </button>
                 <button className="p-1 px-2 bg-red-500 hover:bg-red-600 rounded-lg m-1">
@@ -65,6 +88,8 @@ function EmployeeList() {
           </tbody>
         </table>
       </div>
+
+      {modalOpen && <ModalComponent modal_id={modalId} />}
     </div>
   );
 }

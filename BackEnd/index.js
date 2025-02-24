@@ -15,11 +15,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const adminRoute = require("./route/admin.route");
 const employeeRoute = require("./route/employee.route");
+const newAdminRoute = require("./route/newadmin.route");
 
 connectDB()
     .then((result) => {
@@ -34,6 +35,7 @@ connectDB()
 
 app.use("/admin", adminRoute);
 app.use("/employee", employeeRoute);
+app.use("/new-admin",newAdminRoute);
 
 app.listen(process.env.PORT || 8000, () => {
     console.log("SERVER IS RUNNING ON PORT: ", process.env.PORT);

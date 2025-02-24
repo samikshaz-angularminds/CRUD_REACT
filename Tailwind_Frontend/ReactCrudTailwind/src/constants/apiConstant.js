@@ -1,6 +1,6 @@
 export const API_URL = "http://localhost:8080";
 
-export const ADMIN_REGISTER = "/admin"
+export const ADMIN_REGISTER = "/new-admin/register"
 export const ADMIN_LOGIN = "/admin/login";
 export const ADMIN_LOGOUT  = "/admin/logout";
 export const GET_ADMIN_PROFILE = "/admin/my-profile";

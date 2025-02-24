@@ -1,20 +1,81 @@
-import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import * as constants from "../constants/apiConstant";
 
 function Register(params) {
-  const [range, setRange] = useState(0);
+  // const registerObject = {
+  //   employee_id: "",
+  //   name: "",
+  //   email: "",
+  //   linkedIn: "",
+  //   phoneNo: "",
+  //   age: 0,
+  //   password: "",
+  //   workShift: [],
+  //   gender: "",
+  //   experience: 0,
+  //   department: "",
+  //   designation: "",
+  //   date_of_joining: "",
+  //   resume: null,
+  // };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const workShiftArray = ["Night", "Day", "Evening"];
+  const genderArray = ["Male", "Female", "Other"];
+
+  const onFormSubmit = (data) => {    
+    const formData = new FormData();
+    console.log("data: ", data);
+
+    // formData.append("employee_id", data.employee_id);
+    // formData.append("name", data.name);
+    // formData.append("email", data.email);
+    // formData.append("linkedIn", data.linkedIn);
+    // formData.append("phoneNo", data.phoneNo);
+    // formData.append("age", data.age);
+    // formData.append("password", data.password);
+    // formData.append("gender", data.gender);
+    // formData.append("experience", data.experience);
+    // formData.append("department", data.department);
+    // formData.append("date_of_joining", data.date_of_joining);
+    // formData.append("resume", data.resume[0]);
+    // data.workShift.forEach((shift) => {
+    //   formData.append("workShift", shift);
+    // });
+
+    // axios
+    //   .post(`${constants.API_URL}${constants.ADMIN_REGISTER}`, formData)
+    //   .then((response) => {
+    //     console.log("response: ", response);
+    //   })
+    //   .catch((error) => {
+    //     console.log("error occurred during admin registration");
+    //   });
+  };
 
   return (
     <div className="container mx-auto  mt-6   flex justify-center">
-      <div className="border border-gray-500 mt-14 rounded-lg w-1/4 drop-shadow-lg bg-amber-200">
+      <div className="border border-gray-500 mt-14 rounded-lg w-1/3 drop-shadow-lg bg-amber-200">
         <div className="p-4 mt-4 flex justify-center">
           <h2 className="text-2xl">Register</h2>
         </div>
 
-        <div className="flex justify-center mt-4 mb-16">
-          <form action="" className="mx-auto">
+        <div className="flex w-full justify-center mt-4 mb-16">
+          <form
+            action=""
+            className="w-1/2"
+            onSubmit={handleSubmit(onFormSubmit)}
+          >
+
             {/* EMPLOYEE ID */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Employee ID
@@ -22,12 +83,15 @@ function Register(params) {
               </div>
               <input
                 type="text"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("employee_id", {
+                  required: "Employee Id is required",
+                })}
+                className="bg-white w-full p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* NAME */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Name
@@ -35,12 +99,13 @@ function Register(params) {
               </div>
               <input
                 type="text"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("name", { required: "Name is required" })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* EMAIL */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Email
@@ -48,12 +113,13 @@ function Register(params) {
               </div>
               <input
                 type="email"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("email", { required: "Email is required" })}
+                className=" w-full bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* LINKEDIN */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   LinkedIn
@@ -61,12 +127,15 @@ function Register(params) {
               </div>
               <input
                 type="url"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("linkedIn", {
+                  required: "LinkedIn url is required",
+                })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* PHONE NO */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Phone No
@@ -74,12 +143,16 @@ function Register(params) {
               </div>
               <input
                 type="phone"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                maxLength={10}
+                {...register("phoneNo", {
+                  required: "Phone number is required",
+                })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* AGE */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Age
@@ -87,12 +160,13 @@ function Register(params) {
               </div>
               <input
                 type="number"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("age", { required: "Age is required" })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* PASSWORD */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Password
@@ -100,58 +174,61 @@ function Register(params) {
               </div>
               <input
                 type="password"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("password", {
+                  required: "password is required",
+                })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* WORK SHIFT */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Work Shift
                 </label>
               </div>
-              <label className="pr-2">
-                <input type="checkbox" name="shift" className="m-1" />
-                Night
-              </label>
-              <label className="p-2">
-                <input type="checkbox" name="shift" className="m-1" />
-                Day
-              </label>
-              <label className="p-2">
-                <input type="checkbox" name="shift" className="m-1" />
-                Evening
-              </label>
+              {workShiftArray.map((label, index) => (
+                <label key={index} className="mr-3">
+                  <input
+                    value={label}
+                    {...register("workShift", {
+                      required: "At least one shift is required",
+                    })}
+                    type="checkbox"
+                    className="mr-1"
+                  />
+                  {label}
+                </label>
+              ))}
             </div>
 
             {/* GENDER */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Gender
                 </label>
               </div>
 
-              <label className="pr-2">
-                {" "}
-                <input type="radio" name="gender" className="m-1" />
-                Male{" "}
-              </label>
-              <label className="p-2">
-                {" "}
-                <input type="radio" name="gender" className="m-1" />
-                Female{" "}
-              </label>
-              <label className="p-2">
-                {" "}
-                <input type="radio" name="gender" className="m-1" />
-                Other{" "}
-              </label>
+              {genderArray.map((gender, index) => (
+                <label key={index} className="mr-3">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value={gender}
+                    {...register("gender", {
+                      required: "Gender is required",
+                    })}
+                    className="m-1 "
+                  />
+                  {gender}
+                </label>
+              ))}
             </div>
 
             {/* EXPERIENCE */}
-            <div className="p-3.5 relative">
+            <div className="py-3.5 w-full relative">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Experience
@@ -167,30 +244,36 @@ function Register(params) {
                   (document.getElementById("expValue").textContent =
                     e.target.value)
                 }
-                className=" bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("experience", {
+                  required: "Experience is required",
+                })}
+                className=" bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
               <output id="expValue" />
             </div>
 
             {/* DEPARTMENT */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Department
                 </label>
               </div>
-              <select className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400">
+              <select
+                className="bg-white p-1 w-full  rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("department", { required: true })}
+              >
                 <option value="it">IT</option>
-                <option value="it">IT</option>
-                <option value="it">IT</option>
-                <option value="it">IT</option>
-                <option value="it">IT</option>
-                <option value="it">IT</option>
+                <option value="it">IT2</option>
+                <option value="it">IT3</option>
+                <option value="it">IT4</option>
+                <option value="it">IT5</option>
+                <option value="it">IT6</option>
               </select>
             </div>
 
             {/* DATE OF JOINING */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
                   Date Of Joining
@@ -198,12 +281,15 @@ function Register(params) {
               </div>
               <input
                 type="date"
-                className="bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
+                {...register("date_of_joining", {
+                  required: "date of joining is required",
+                })}
+                className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
             </div>
 
             {/* RESUME */}
-            <div className="p-3.5">
+            <div className="py-3.5 w-full">
               <div>
                 <div>
                   <label htmlFor="" className="font-semibold">
@@ -221,7 +307,43 @@ function Register(params) {
                   </label>
                 </div>
               </div>
-              <input type="file" id="fileUpload" className="hidden" />
+              <input
+                {...register("resume", {
+                  required: "resume file is required",
+                })}
+                type="file"
+                id="fileUpload"
+                className="hidden"
+              />
+            </div>
+
+            {/* PROFILE_PICTURE */}
+            <div className="py-3.5 w-full">
+              <div>
+                <div>
+                  <label htmlFor="" className="font-semibold">
+                    Profile Picture
+                  </label>
+                </div>
+                <div>
+                  <label htmlFor="fileUpload2">
+                    <span className="flex justify-between bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400">
+                      Select a picture{" "}
+                      <div className="text-lg content-center">
+                        <MdKeyboardArrowDown />
+                      </div>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <input
+                {...register("profile_picture", {
+                  required: "profile_picture is required",
+                })}
+                type="file"
+                id="fileUpload2"
+                className="hidden"
+              />
             </div>
 
             {/* SUBMIT  */}
@@ -230,7 +352,6 @@ function Register(params) {
                 <span className="font-semibold">Register</span>
               </button>
             </div>
-            
           </form>
         </div>
       </div>

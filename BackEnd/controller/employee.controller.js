@@ -2,7 +2,6 @@ const Employee = require("../model/employee.model");
 const Admin = require("../model/admin.model");
 const asyncHandler = require("../utils/AsyncHandler.utils");
 const ApiError = require("../utils/ApiError.utils");
-const ApiResponse = require("../utils/ApiResponse.utils");
 
 const addEmployee = asyncHandler(async (req, res) => {
     const requestBody = req.body;

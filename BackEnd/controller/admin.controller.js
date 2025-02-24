@@ -1,7 +1,6 @@
 const Admin = require("../model/admin.model");
 const asyncHandler = require("../utils/AsyncHandler.utils");
 const ApiError = require("../utils/ApiError.utils");
-const ApiResponse = require("../utils/ApiResponse.utils");
 
 const options = {
     httpOnly: true,
