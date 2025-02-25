@@ -11,4 +11,9 @@ router
     {name: "profile_picture", maxCount: 1}
 ]),newAdminController.createAdmin);
 
+router
+.route("/login")
+.post(newAdminController.loginAdmin);
+
+
 module.exports = router;

@@ -39,7 +39,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
     const requestBody = req.body;
 
-    const admin = await Admin.findOne({ employee_id: requestBody.employee_id });
+    const admin = await Admin.findOne({ employee_id: requestBody.employee_id, password: requestBody.password });
 
     if (!admin) {
         throw new ApiError(404, "admin not found");
@@ -52,7 +52,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
     console.log('====================================');
 
     return res
-        .cookie("token")
+        .cookie("token",options)
         .json(
             { admin, token }
         );

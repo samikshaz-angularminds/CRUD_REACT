@@ -1,36 +1,45 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const ThemeContext = createContext();
+export const ThemeContext = createContext();
 
-// export const 
+export const useThemeContext = () => useContext(ThemeContext);
 
-function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("");
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "");
 
   useEffect(() => {
-    if (theme !== "auto") {
-      document.documentElement.dataset.theme = theme;
-      return;
+    setSystemThemeToApp();
+    console.log("in use context-------> ");
+
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme:dark)");
-
-    document.documentElement.dataset.theme = mediaQuery.matches
-      ? "dark"
-      : "light";
-
-    function handleChange(e) {
-      document.documentElement.dataset.theme = e.matches ? "dark" : "light";
-    }
-
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => mediaQuery.removeEventListener("change", handleChange);
   }, [theme]);
+
+  const setSystemThemeToApp = () => {
+    const isSystemThemeDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const isThemeNull = localStorage.getItem("theme");
+
+    console.log("isSystemThemeDark----- > ", isSystemThemeDark.matches);
+    console.log("isThemeNull----> ", isThemeNull);
+    if (isThemeNull === null && isSystemThemeDark.matches) {
+      console.log("setting dark theme");
+
+      setTheme("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      console.log("setting light theme");
+
+      setTheme("light");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
-}
+};

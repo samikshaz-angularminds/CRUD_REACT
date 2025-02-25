@@ -10,8 +10,6 @@ verifyToken = asyncHandler(async (req, res, next) => {
 
     try {
         const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
-
-        // console.log("token- ",token);
         
 
         if (!token) {

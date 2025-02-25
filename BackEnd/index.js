@@ -4,7 +4,6 @@ const connectDB = require("./db/index");
 const dotenv = require("dotenv");
 const cors = require('cors')
 
-
 dotenv.config();
 
 const corsOptions = {
@@ -21,6 +20,7 @@ app.use(express.json());
 const adminRoute = require("./route/admin.route");
 const employeeRoute = require("./route/employee.route");
 const newAdminRoute = require("./route/newadmin.route");
+const newEmployeeRoute = require("./route/newemployee.route");
 
 connectDB()
     .then((result) => {
@@ -36,6 +36,7 @@ connectDB()
 app.use("/admin", adminRoute);
 app.use("/employee", employeeRoute);
 app.use("/new-admin",newAdminRoute);
+app.use("/new-employee",newEmployeeRoute);
 
 app.listen(process.env.PORT || 8000, () => {
     console.log("SERVER IS RUNNING ON PORT: ", process.env.PORT);

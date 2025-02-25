@@ -1,13 +1,24 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
-function ModalComponent({ modal_id }) {
-
+function ModalComponent({ modal_id, updateEmployee }) {
+  const [employeeValues, setEmployeeValues] = useState();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    if (modal_id === "updateEmployeeModal" && updateEmployee){
+      setEmployeeValues(updateEmployee);
+      console.log("id of modal---> ",modal_id);
+      console.log("employee to be updated---> ",updateEmployee);
+      
+      
+    }
+  }, []);
 
   const onAddEmployee = (data) => {
     console.log("====================================");
@@ -32,7 +43,9 @@ function ModalComponent({ modal_id }) {
         action=""
         className=""
         onSubmit={
-          modal_id === "addEmployeeModal" ? handleSubmit(onAddEmployee) : handleSubmit(onUpdateEmployee)
+          modal_id === "addEmployeeModal"
+            ? handleSubmit(onAddEmployee)
+            : handleSubmit(onUpdateEmployee)
         }
       >
         <div className="flex w-full">
@@ -48,6 +61,7 @@ function ModalComponent({ modal_id }) {
               {...register("employee_id", {
                 required: "Employee Id is required",
               })}
+              defaultValue={updateEmployee ? employeeValues?.employee_id : ""}
               name="employee_id"
               className="bg-white w-full p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -57,12 +71,13 @@ function ModalComponent({ modal_id }) {
           <div className="p-3.5 w-full">
             <div>
               <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                Name
+                Nameemployee_id
               </label>
             </div>
             <input
               type="text"
               {...register("name", { required: "Name is required" })}
+              defaultValue={updateEmployee ? employeeValues?.name : ""}
               name="name"
               className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -80,6 +95,7 @@ function ModalComponent({ modal_id }) {
             <input
               type="email"
               {...register("email", { required: "Email is required" })}
+              defaultValue={updateEmployee ? employeeValues?.email : ""}
               name="email"
               className=" w-full bg-white p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -97,6 +113,7 @@ function ModalComponent({ modal_id }) {
               {...register("linkedIn", {
                 required: "LinkedIn url is required",
               })}
+              defaultValue={updateEmployee ? employeeValues?.linkedIn : ""}
               name="linkedIn"
               className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -115,6 +132,7 @@ function ModalComponent({ modal_id }) {
               type="phone"
               maxLength={10}
               {...register("phoneNo", { required: "Phone Number is required" })}
+              defaultValue={updateEmployee ? employeeValues?.phoneNo : ""}
               name="phoneNo"
               className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -130,6 +148,7 @@ function ModalComponent({ modal_id }) {
             <input
               type="number"
               name="age"
+              defaultValue={updateEmployee ? employeeValues?.age : ""}
               {...register("age", { required: "Age is required" })}
               className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -151,6 +170,7 @@ function ModalComponent({ modal_id }) {
                   name="workShift"
                   className="mr-1"
                   value={label}
+                  checked = {updateEmployee?.workShift?.includes(label) || false}
                   {...register("workShift", {
                     required: "Work shift is required",
                   })}
@@ -172,7 +192,9 @@ function ModalComponent({ modal_id }) {
               <label key={index} className="mr-3">
                 <input
                   type="radio"
-                  name="gender" value={gender}
+                  name="gender"
+                  value={gender}
+                  checked = {updateEmployee?.gender === gender}
                   {...register("gender", { required: "Gender is required" })}
                   className="m-1"
                 />
@@ -199,6 +221,7 @@ function ModalComponent({ modal_id }) {
                 (document.getElementById("expValue").textContent =
                   e.target.value)
               }
+              defaultValue={updateEmployee ? employeeValues?.experience : ""}
               {...register("experience", {
                 required: "Experience is required",
               })}
@@ -218,6 +241,7 @@ function ModalComponent({ modal_id }) {
               {...register("department", {
                 required: "Department is required",
               })}
+              defaultValue={updateEmployee ? employeeValues?.department : ""}
               name="department"
               className="bg-white p-1 w-full  rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             >
@@ -244,6 +268,7 @@ function ModalComponent({ modal_id }) {
               {...register("date_of_joining", {
                 required: "Date of joining is required",
               })}
+              defaultValue={updateEmployee ? employeeValues?.date_of_joining : ""}
               name="date_of_joining"
               className="bg-white w-full  p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
             />
@@ -272,6 +297,7 @@ function ModalComponent({ modal_id }) {
               type="file"
               name="resume"
               {...register("resume", { required: "Resume is required" })}
+              defaultValue={updateEmployee ? employeeValues?.resume : ""}
               id="fileUpload"
               className="hidden"
             />
@@ -303,6 +329,7 @@ function ModalComponent({ modal_id }) {
             {...register("profile_picture", {
               required: "Profile picture is required",
             })}
+            defaultValue={updateEmployee ? employeeValues?.profile_picture : ""}
             id="fileUpload2"
             className="hidden"
           />

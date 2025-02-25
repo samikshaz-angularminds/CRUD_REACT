@@ -20,11 +20,13 @@ const newAdminSchema = new mongoose.Schema(
     {
         employee_id: {
             type:String,
-            required:true
+            required:true,
+            unique: true
         },
         name: {
             type:String,
-            required:true
+            required:true,
+
         },
         email:{
             type:String,
@@ -73,14 +75,17 @@ const newAdminSchema = new mongoose.Schema(
             type:String,
             required:true
         },
-        profile_picture : profileSchema
+        profile_picture : {
+            type:profileSchema,
+            required:true
+        }
     }
 );
 
 newAdminSchema.methods.generateToken = function (){
     return jwt.sign(
         {_id : this._id, email: this.email, employee_id: this.employee_id},
-        process.env.TOKEN_SECRET,
+        process.env.NEW_TOKEN_SECRET,
         {expiresIn: "1d"}
     );
 };

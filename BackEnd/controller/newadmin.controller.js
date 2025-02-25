@@ -3,19 +3,23 @@ const asyncHandler = require("../utils/AsyncHandler.utils");
 const ApiError = require("../utils/ApiError.utils");
 const cloudinary = require("../config/cloudinary.config");
 
+const options = {
+    httpOnly: true,
+    secure: true
+};
+
 const createAdmin = asyncHandler(async (req, res) => {
-    let requestBody = req.body;
-    const requestFiles = req.files;
+    let requestBody = req.body; // getting body
+    const requestFiles = req.files; //getting file
 
     console.log('====================================');
-    console.log("request body-------> ",requestBody);
+    console.log(requestBody);
+    console.log('====================================');
+    console.log('====================================');
+    console.log(requestFiles);
     console.log('====================================');
 
-    console.log('====================================');
-    console.log("request files: ",requestFiles.resume[0]);
-    console.log('====================================');
-    console.log("request files: ",requestFiles.profile_picture[0]);
-
+    // handling errors
     if ((!requestBody.employee_id)) throw new ApiError(400, "Employee Id is required")
     if ((!requestBody.name)) throw new ApiError(400, "name is required")
     if ((!requestBody.email)) throw new ApiError(400, "email is required")
@@ -38,16 +42,17 @@ const createAdmin = asyncHandler(async (req, res) => {
         folder: "Resume"
     }));
 
-    const profile_picture_Upload = await cloudinary.uploader.upload(requestFiles.profile_picture[0].path,({
+    const profile_picture_Upload = await cloudinary.uploader.upload(requestFiles.profile_picture[0].path, ({
         resource_type: "image",
         folder: "Crud_ProfilePic"
-    })) 
+    }));
+
     const resumeUrl = resumeUpload.url;
 
     const profile_picture = {
-        public_id : profile_picture_Upload.public_id,
-        url : profile_picture_Upload.url
-    }
+        public_id: profile_picture_Upload.public_id,
+        url: profile_picture_Upload.url
+    };
 
     requestBody.resume = resumeUrl;
     requestBody.profile_picture = profile_picture;
@@ -57,7 +62,26 @@ const createAdmin = asyncHandler(async (req, res) => {
     return res.json(newAdmin);
 });
 
+const loginAdmin = asyncHandler(async (req, res) => {
+    const requestBody = req.body;
+
+    const newadmin = await NewAdmin.findOne({ employee_id: requestBody.employee_id, password: requestBody.password });
+
+    if (!newadmin) {
+        throw new ApiError(404, "Employee with employee_id not found");
+    }
+
+    const token = newadmin.generateToken();
+
+    return res
+        .cookie("loginToken", options)
+        .json({ newadmin, token });
+});
+
+
+
 
 module.exports = {
-    createAdmin
+    createAdmin,
+    loginAdmin
 };
