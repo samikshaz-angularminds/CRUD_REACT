@@ -1,7 +1,7 @@
-import { Navigate, useNavigate } from "react-router-dom";
-import Header from "./components/Header";
-import { getToken } from "./services/token-decode-service";
+import { useNavigate } from "react-router-dom";
+import { getToken } from "../services/token.service";
 import { useEffect } from "react";
+import Header from "../components/header.component";
 
 export default function ProtectedRoute({ children }) {
   const isLoggedIn = getToken();
@@ -10,9 +10,8 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/");
+      return undefined;
     }
-
-    return undefined;
   }, [navigate]);
 
   return (
@@ -22,7 +21,6 @@ export default function ProtectedRoute({ children }) {
           <Header></Header> {children}
         </>
       )}
-      
     </>
   );
 }

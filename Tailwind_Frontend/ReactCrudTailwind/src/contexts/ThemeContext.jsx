@@ -8,8 +8,9 @@ export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "");
 
   useEffect(() => {
-    setSystemThemeToApp();
-    console.log("in use context-------> ");
+    if(localStorage.getItem("theme")===null) setSystemThemeToApp();
+    
+    // console.log("in use context-------> ");
 
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -22,15 +23,15 @@ export const ThemeProvider = ({ children }) => {
     const isSystemThemeDark = window.matchMedia("(prefers-color-scheme: dark)");
     const isThemeNull = localStorage.getItem("theme");
 
-    console.log("isSystemThemeDark----- > ", isSystemThemeDark.matches);
-    console.log("isThemeNull----> ", isThemeNull);
+    // console.log("isSystemThemeDark----- > ", isSystemThemeDark.matches);
+    // console.log("isThemeNull----> ", isThemeNull);
     if (isThemeNull === null && isSystemThemeDark.matches) {
-      console.log("setting dark theme");
+      // console.log("setting dark theme");
 
       setTheme("dark");
       localStorage.setItem("theme", "dark");
     } else {
-      console.log("setting light theme");
+      // console.log("setting light theme");
 
       setTheme("light");
       localStorage.setItem("theme", "light");

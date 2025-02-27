@@ -40,7 +40,6 @@ function EmployeeList() {
       params: queryParams,
     });
 
-    // console.log("query params in get all employees---> ", queryParams);
 
     axiosRequest
       .then((response) => {
@@ -74,6 +73,7 @@ function EmployeeList() {
 
   const sortById = (e) => {
     const sort = e.target.value;
+    setSortValue(sort);
     setQueryParams((prev) => ({ ...prev, sortById: sort }));
     getAllEmployees();
   };
@@ -160,8 +160,6 @@ function EmployeeList() {
           <div>
             <select
               className="form-select"
-              name=""
-              id=""
               value={filterValue}
               onChange={(e) => handleFilter(e)}
             >
@@ -178,7 +176,7 @@ function EmployeeList() {
           <div>
             <select
               className="form-select"
-              value={10}
+              value={currentLimit}
               onChange={(e) => handleLimit(e)}
             >
               <option value="Select">Select</option>

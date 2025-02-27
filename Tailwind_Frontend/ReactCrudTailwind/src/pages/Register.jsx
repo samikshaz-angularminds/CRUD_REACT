@@ -4,27 +4,11 @@ import axios from "axios";
 import * as constants from "../constants/apiConstant";
 
 function Register(params) {
-  // const registerObject = {
-  //   employee_id: "",
-  //   name: "",
-  //   email: "",
-  //   linkedIn: "",
-  //   phoneNo: "",
-  //   age: 0,
-  //   password: "",
-  //   workShift: [],
-  //   gender: "",
-  //   experience: 0,
-  //   department: "",
-  //   designation: "",
-  //   date_of_joining: "",
-  //   resume: null,
-  // };
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    trigger
   } = useForm();
 
   const workShiftArray = ["Night", "Day", "Evening"];
@@ -34,21 +18,21 @@ function Register(params) {
     const formData = new FormData();
     console.log("data: ", data);
 
-    // formData.append("employee_id", data.employee_id);
-    // formData.append("name", data.name);
-    // formData.append("email", data.email);
-    // formData.append("linkedIn", data.linkedIn);
-    // formData.append("phoneNo", data.phoneNo);
-    // formData.append("age", data.age);
-    // formData.append("password", data.password);
-    // formData.append("gender", data.gender);
-    // formData.append("experience", data.experience);
-    // formData.append("department", data.department);
-    // formData.append("date_of_joining", data.date_of_joining);
-    // formData.append("resume", data.resume[0]);
-    // data.workShift.forEach((shift) => {
-    //   formData.append("workShift", shift);
-    // });
+    formData.append("employee_id", data.employee_id);
+    formData.append("name", data.name);
+    formData.append("email", data.email);
+    formData.append("linkedIn", data.linkedIn);
+    formData.append("phoneNo", data.phoneNo);
+    formData.append("age", data.age);
+    formData.append("password", data.password);
+    formData.append("gender", data.gender);
+    formData.append("experience", data.experience);
+    formData.append("department", data.department);
+    formData.append("date_of_joining", data.date_of_joining);
+    formData.append("resume", data.resume[0]);
+    data.workShift.forEach((shift) => {
+      formData.append("workShift", shift);
+    });
 
     // axios
     //   .post(`${constants.API_URL}${constants.ADMIN_REGISTER}`, formData)
@@ -78,7 +62,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Employee ID
+                  Employee ID<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -86,15 +70,17 @@ function Register(params) {
                 {...register("employee_id", {
                   required: "Employee Id is required",
                 })}
+                onBlur={() => trigger("employee_id")}
                 className="bg-white w-full p-1 rounded-sm border focus:border-l-0 border-l-0 focus:outline-0 focus:border-t-0 border-t-0 focus:border-r-0 border-r-0 focus:border-b-gray-400 border-b-gray-400"
               />
+              {errors.employee_id && <p className="text-red-700"> {errors.employee_id.message} </p>}
             </div>
 
             {/* NAME */}
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Name
+                  Full Name<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -108,7 +94,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Email
+                  Email<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -122,7 +108,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  LinkedIn
+                  LinkedIn<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -138,7 +124,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Phone No
+                  Phone No<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -155,7 +141,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Age
+                  Age<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -169,7 +155,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Password
+                  Password<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -185,7 +171,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Work Shift
+                  Work Shift<span className="text-red-600">*</span>
                 </label>
               </div>
               {workShiftArray.map((label, index) => (
@@ -207,7 +193,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Gender
+                  Gender<span className="text-red-600">*</span>
                 </label>
               </div>
 
@@ -231,7 +217,7 @@ function Register(params) {
             <div className="py-3.5 w-full relative">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Experience
+                  Experience<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -256,7 +242,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Department
+                  Department<span className="text-red-600">*</span>
                 </label>
               </div>
               <select
@@ -276,7 +262,7 @@ function Register(params) {
             <div className="py-3.5 w-full">
               <div>
                 <label htmlFor="" className="dark:text-cyan-50 font-semibold">
-                  Date Of Joining
+                  Date Of Joining<span className="text-red-600">*</span>
                 </label>
               </div>
               <input
@@ -293,7 +279,7 @@ function Register(params) {
               <div>
                 <div>
                   <label htmlFor="" className="font-semibold">
-                    Resume
+                    Resume<span className="text-red-600">*</span>
                   </label>
                 </div>
                 <div>
@@ -322,7 +308,7 @@ function Register(params) {
               <div>
                 <div>
                   <label htmlFor="" className="font-semibold">
-                    Profile Picture
+                    Profile Picture<span className="text-red-600">*</span>
                   </label>
                 </div>
                 <div>

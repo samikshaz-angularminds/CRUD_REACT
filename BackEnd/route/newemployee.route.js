@@ -21,7 +21,7 @@ router
     .put(verifyToken, upload.fields([
         { name: "resume", maxCount: 1 },
         { name: "profile_picture", maxCount: 1 }
-    ]), newEmployeeController.updateEmployee)
+    ]) || ((req,res,next) => next()), newEmployeeController.updateEmployee)
     .delete(verifyToken, newEmployeeController.deleteEmployee)
 
 

@@ -35,7 +35,7 @@ const addEmployee = asyncHandler(async (req, res) => {
         folder: "Resume"
     }));
 
-    const profile_picture_Upload = await cloudinary.uploader.upload(requestFiles.profile_picture[0].path, ({
+    const profile_picture_Upload = await cloudinary.uploader.upload(requestFiles?.profile_picture[0].path, ({
         resource_type: "image",
         folder: "Crud_ProfilePic"
     }));
@@ -75,8 +75,19 @@ const updateEmployee = asyncHandler(async (req, res) => {
 
     const existingEmployee = await NewEmployee.findById(employee_id);
 
+    console.log({ name, email, linkedIn, workShift, department, phoneNo, gender });
+    
+
     resumeUrl = existingEmployee?.resume;
     profile_picture_here = existingEmployee?.profile_picture;
+    name = existingEmployee?.name; 
+    email = existingEmployee?.email; 
+    linkedIn = existingEmployee?.linkedIn; 
+    workShift = existingEmployee?.workShift; 
+    department = existingEmployee?.department; 
+    phoneNo = existingEmployee?.phoneNo; 
+    gender = existingEmployee?.gender;
+
 
     if (requestFiles?.resume) {
         resumeUpload = await cloudinary.uploader.upload(requestFiles?.resume[0].path, ({
@@ -96,8 +107,6 @@ const updateEmployee = asyncHandler(async (req, res) => {
             url: profile_picture_Upload?.url
         };
     }
-
-
 
     const updatedEmployee = await NewEmployee.findByIdAndUpdate(
         employee_id,
@@ -146,18 +155,20 @@ const getEmployees = asyncHandler(async (req, res) => {
     // if req.query exists then requestQueryParams will be assigned a value
     if (req.query !== "") {
         requestQueryParams = req.query;
-        console.log("request query is...", requestQueryParams);
+        // console.log("request query is...", requestQueryParams);
     }
 
-    const page = requestQueryParams.page || 1;
-    let limit = requestQueryParams.limit || 10;
+    const page = requestQueryParams?.page || 1;
+    let limit = requestQueryParams?.limit || 10;
     const skip = (page - 1) * limit;
-    const search = requestQueryParams.search;
-    const filterDept = requestQueryParams.filterDept;
-    const sortById = requestQueryParams.sortById;
+    const search = requestQueryParams?.search;
+    const filterDept = requestQueryParams?.filterDept;
+    const sortById = requestQueryParams?.sortById;
 
     let mongoQuery = { admin: req.new_admin._id };
 
+    // console.log("limit here: ",limit);
+    
     if (filterDept) {
         mongoQuery.department = filterDept;
     }
@@ -166,7 +177,6 @@ const getEmployees = asyncHandler(async (req, res) => {
         mongoQuery.name = { $regex: `^${search}`, $options: "i" };
     }
 
-    let sortOrder = sortById === "asc" ? 1 : -1;
 
     // get all employees
     let employees;

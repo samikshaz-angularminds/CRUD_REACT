@@ -18,3 +18,24 @@ width: 300px;
     transform: translate(-50%);
     font-weight: bold;
 }
+
+
+.pagination-class {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+  }
+  
+  .pagination-class li {
+    padding: 20px;
+  }
+  
+  .pagination-class .previous a {
+    color: brown;
+    text-decoration: none;
+  }
+  
+  .pagination-class .selected a {
+    color: rgb(42, 147, 165);
+  }
+  

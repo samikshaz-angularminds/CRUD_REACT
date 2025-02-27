@@ -79,9 +79,88 @@ const loginAdmin = asyncHandler(async (req, res) => {
 });
 
 
+const getAdmin = asyncHandler(async (req,res) => {
+    const adminId = req.new_admin._id;
+
+    const admin = await NewAdmin.findById(adminId);
+
+    if(!admin){
+        throw new ApiError(404, "Could not find an admin");
+    }
+
+    return res.json(admin);
+});
+
+const updateAdmin = asyncHandler(async (req,res) => {
+    const { name, email, linkedIn, workShift, department, phoneNo, gender } = req.body;
+    const requestFiles = req?.files;
+
+    const admin_id = req.new_admin.id;
+    let resumeUpload;
+    let profile_picture_Upload;
+    let resumeUrl;
+    let profile_picture_here;
+
+    const existingAdmin = await NewAdmin.findById(admin_id);
+
+    // giving them value if no value is provided
+    resumeUrl = existingAdmin?.resume; 
+    profile_picture_here = existingAdmin?.profile_picture;
+
+    if (requestFiles?.resume) {
+        resumeUpload = await cloudinary.uploader.upload(requestFiles?.resume[0].path, ({
+            resource_type: "raw",
+            folder: "Resume"
+        }));
+        resumeUrl = resumeUpload?.url;
+    }
+
+    if (requestFiles?.profile_picture) {
+        profile_picture_Upload = await cloudinary.uploader.upload(requestFiles.profile_picture[0].path, ({
+            resource_type: "image",
+            folder: "Crud_ProfilePic"
+        }));
+        profile_picture_here = {
+            public_id: profile_picture_Upload?.public_id,
+            url: profile_picture_Upload?.url
+        };
+    }
+
+
+
+    const updatedAdmin = await NewAdmin.findByIdAndUpdate(
+        admin_id,
+        {
+            $set: {
+                name: name,
+                email: email,
+                department: department,
+                phoneNo: phoneNo,
+                gender: gender,
+                linkedIn: linkedIn,
+                workShift: workShift,
+                resume: resumeUrl,
+                profile_picture: profile_picture_here
+            }
+        },
+        { new: true },
+    );
+
+    if (!updatedAdmin) {
+        throw new ApiError(400, "Failed to update the information of employee");
+    }
+
+    return res
+        .json(
+            updatedAdmin
+        );
+})
+
 
 
 module.exports = {
     createAdmin,
-    loginAdmin
+    loginAdmin,
+    getAdmin,
+    updateAdmin
 };

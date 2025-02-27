@@ -7,9 +7,9 @@ const verifyNewToken = asyncHandler(async (req,res,next) => {
     try {
         const token = req.cookies?.loginToken || req.header("Authorization").replace("Bearer ","");
 
-        console.log('====================================');
-        console.log("token is-------> ",token);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log("token is-------> ",token);
+        // console.log('====================================');
 
         if(!token){
             throw new ApiError(401, "No token found");
@@ -17,9 +17,9 @@ const verifyNewToken = asyncHandler(async (req,res,next) => {
 
         const decodedToken = jwt.verify(token,process.env.NEW_TOKEN_SECRET);
 
-        console.log('====================================');
-        console.log("DECODED TOKEN IS--------> ",decodedToken);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log("DECODED TOKEN IS--------> ",decodedToken);
+        // console.log('====================================');
 
         const new_admin = await NewAdmin.findById(decodedToken._id);
 
